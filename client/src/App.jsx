@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <Container maxWidth="640px">
+    <Container maxWidth="620px">
       <Navbar />
       <Routes>
         <Route path="/:username" element={<UserPage />} />
