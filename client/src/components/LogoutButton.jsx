@@ -9,14 +9,14 @@ const LogoutButton = () => {
   const showToast = useShowToast();
   const handleLogout = async () => { 
     try {
-      await fetch("/api/users/logout", {
+      const res = await fetch("/api/users/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      const data = await resizeBy.json();
+      const data = await res.json();
       if (data.error) {
         showToast("Error", data.error, "error");
         return;
