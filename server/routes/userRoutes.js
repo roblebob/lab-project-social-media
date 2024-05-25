@@ -24,6 +24,7 @@ router.post("/follow/:id", protectRoute, followUnFollowUser); // Toggle state(fo
 router.put("/update/:id", protectRoute, updateUser);
 router.put("/freeze", protectRoute, freezeAccount);
 
+// just for testing db 
 router.get("/", (req, res) => {
   User.find()
     .then((users) => res.json(users))
