@@ -24,19 +24,17 @@ import userAtom from "../atoms/userAtom";
 
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
-
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const setUser = useSetRecoilState(userAtom);
-
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
-
   const showToast = useShowToast();
-
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const res = await fetch("/api/users/login", {
         method: "POST",
@@ -51,12 +49,13 @@ export default function SignupCard() {
       if (data.error) {
         showToast("Error", data.error, "error");
         return;
-      }
-      console.log(data);
+      } 
       localStorage.setItem("user-threads", JSON.stringify(data));
       setUser(data);
     } catch (error) {
       showToast("Error", error, "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,6 +119,7 @@ export default function SignupCard() {
                   bg: useColorModeValue("gray.700", "gray.800"),
                 }}
                 onClick={handleLogin}
+                isLoading={loading}
               >
                 Login
               </Button>
