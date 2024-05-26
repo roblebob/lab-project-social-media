@@ -33,6 +33,8 @@ const colors = {
 const theme = extendTheme({ styles, config, colors });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
+  
+  // React.strictMode renders every component twice on development, on production only once.
   <React.StrictMode>
     <RecoilRoot>
       <BrowserRouter>
