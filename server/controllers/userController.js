@@ -171,12 +171,13 @@ const updateUser = async (req, res) => {
     }
 
     if (profilePic) {
+      // Delete old profilePic from cloudinary
       if (user.profilePic) {
         await cloudinary.uploader.destroy(
           user.profilePic.split("/").pop().split(".")[0]
         );
       }
-
+      // Upload new profilePic to cloudinary
       const uploadedResponse = await cloudinary.uploader.upload(profilePic);
       profilePic = uploadedResponse.secure_url;
     }

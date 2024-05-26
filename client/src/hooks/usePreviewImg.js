@@ -6,7 +6,7 @@ const usePreviewImg = () => {
   const showToast = useShowToast();
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; 
+    const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
 
@@ -20,7 +20,6 @@ const usePreviewImg = () => {
       setImgUrl(null);
     }
   };
-  console.log(imgUrl);
   return { handleImageChange, imgUrl };
 };
 
