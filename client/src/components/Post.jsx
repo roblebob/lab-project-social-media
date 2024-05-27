@@ -1,17 +1,19 @@
-import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react"; 
+import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import Actions from "./Actions";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { formatDistanceToNow } from "date-fns";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
+import postsAtom from "../atoms/postsAtom";
 
-const Post = ({ post, postedBy }) => {
+const Post = ({ post, postedBy  }) => {
   const [user, setUser] = useState(null);
   const showToast = useShowToast();
   const currentUser = useRecoilValue(userAtom);
+  const [posts, setPosts] = useRecoilState(postsAtom);
 
   const navigate = useNavigate();
 
@@ -33,7 +35,6 @@ const Post = ({ post, postedBy }) => {
     getUser();
   }, [postedBy, showToast]);
 
-
   const handleDeletePost = async (e) => {
     try {
       e.preventDefault();
@@ -50,14 +51,11 @@ const Post = ({ post, postedBy }) => {
         return;
       }
       showToast("Success", "Post deleted successfully", "success");
-      
-
+      setPosts(posts.filter((p) => p._id !== post._id));
     } catch (error) {
       showToast("Error", error.message, "error");
     }
   };
-
-
 
   if (!user) return null;
 
@@ -133,11 +131,18 @@ const Post = ({ post, postedBy }) => {
             </Flex>
 
             <Flex gap={4} alignItems={"center"}>
-              <Text fontSize={"xs"} w={36} textAlign={"right"} color={"gray.light"}>
+              <Text
+                fontSize={"xs"}
+                w={36}
+                textAlign={"right"}
+                color={"gray.light"}
+              >
                 {formatDistanceToNow(new Date(post.createdAt))} ago
               </Text>
 
-              {currentUser?._id === user._id && <DeleteIcon size={20} onClick={handleDeletePost}/>}
+              {currentUser?._id === user._id && (
+                <DeleteIcon size={20} onClick={handleDeletePost} />
+              )}
             </Flex>
           </Flex>
 
@@ -155,10 +160,8 @@ const Post = ({ post, postedBy }) => {
           )}
 
           <Flex gap={3} my={1}>
-            <Actions post={post} />
+            <Actions post={post}   />
           </Flex>
-
-          
         </Flex>
       </Flex>
     </Link>
