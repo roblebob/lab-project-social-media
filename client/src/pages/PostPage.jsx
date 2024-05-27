@@ -7,9 +7,8 @@ import {
   Box,
   Divider,
   Button,
-  Spinner,
+  Spinner, 
 } from "@chakra-ui/react";
-import { BsThreeDots } from "react-icons/bs";
 import Actions from "../components/Actions";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,6 +17,7 @@ import { formatDistanceToNow } from "date-fns";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
+import Comment from "../components/Comment";
 
 const PostPage = () => {
   const { user, loading } = useGetUserProfile();
@@ -28,7 +28,6 @@ const PostPage = () => {
   const { postId } = useParams();
 
   const navigate = useNavigate();
-
 
   const handleDeletePost = async (/* e */) => {
     try {
@@ -46,13 +45,11 @@ const PostPage = () => {
         return;
       }
       showToast("Success", "Post deleted successfully", "success");
-      navigate(`/${user.username}`);
-
+      navigate(`/${user.username}`); // <= new
     } catch (error) {
       showToast("Error", error.message, "error");
     }
   };
-
 
   useEffect(() => {
     const getPost = async () => {
@@ -73,8 +70,6 @@ const PostPage = () => {
 
     getPost();
   }, [postId, showToast]);
-
- 
 
   if (!user && loading)
     return (
@@ -104,7 +99,11 @@ const PostPage = () => {
           </Text>
 
           {currentUser?._id === user._id && (
-            <DeleteIcon size={20} onClick={handleDeletePost} cursor={"pointer"}/>
+            <DeleteIcon
+              size={20}
+              onClick={handleDeletePost}
+              cursor={"pointer"}
+            />
           )}
         </Flex>
       </Flex>
@@ -126,8 +125,6 @@ const PostPage = () => {
         <Actions post={post} />
       </Flex>
 
-
-
       <Divider my={4} />
 
       <Flex justifyContent={"space-between"}>
@@ -141,13 +138,13 @@ const PostPage = () => {
 
       <Divider my={4} />
 
-      {/* <Comment
-        comment={"Looks really good"}
-        createdAt={"2d"}
-        likes={100}
-        userName={"johndoe"}
-        userAvatar={"https://bit.ly/dan-abramov"}
-      /> */}
+      {post.replies.map((reply) => (
+        <Comment
+          key={reply._id}
+          reply={reply}
+          lastReply={reply._id === post.replies[post.replies.length - 1]._id}
+        />
+      ))}
     </>
   );
 };
