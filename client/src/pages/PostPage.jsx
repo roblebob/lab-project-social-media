@@ -12,7 +12,7 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 import Actions from "../components/Actions";
 import useGetUserProfile from "../hooks/useGetUserProfile";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
 import { formatDistanceToNow } from "date-fns";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -26,6 +26,33 @@ const PostPage = () => {
   const currentUser = useRecoilValue(userAtom);
 
   const { postId } = useParams();
+
+  const navigate = useNavigate();
+
+
+  const handleDeletePost = async (/* e */) => {
+    try {
+      // e.preventDefault();
+      if (!window.confirm("Are you sure you want to delete this post?")) return;
+
+      const res = await fetch(`/api/posts/${post._id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+      showToast("Success", "Post deleted successfully", "success");
+      navigate(`/${user.username}`);
+
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    }
+  };
+
 
   useEffect(() => {
     const getPost = async () => {
@@ -47,7 +74,7 @@ const PostPage = () => {
     getPost();
   }, [postId, showToast]);
 
-  const handleDeletePost = async () => {};
+ 
 
   if (!user && loading)
     return (
