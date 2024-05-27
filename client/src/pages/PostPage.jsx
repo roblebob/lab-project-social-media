@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Flex,
   Avatar,
@@ -7,21 +7,60 @@ import {
   Box,
   Divider,
   Button,
+  Spinner,
 } from "@chakra-ui/react";
 import { BsThreeDots } from "react-icons/bs";
-import Actions from "../components/Actions";
-import Comment from "../components/Comment";
+import Actions from "../components/Actions"; 
+import useGetUserProfile from "../hooks/useGetUserProfile";
+import { useParams } from "react-router-dom";
+import useShowToast from "../hooks/useShowToast";
 
-const PostPage = () => {
-  const [liked, setLiked] = useState(false);
+const PostPage = () => { 
+
+  const {user, loading} = useGetUserProfile();
+  const [post, setPost] = useState(null);
+  const showToast = useShowToast(); 
+
+  const { postId } = useParams();
+
+  useEffect(() => { 
+    const getPost = async () => {
+      try {
+        const res = await fetch(`/api/posts/${postId}`);
+        const data = await res.json();
+
+        if (data.error) {
+          showToast("Error", data.error, "error");
+          return;
+        }
+        console.log(data);
+        setPost(data);
+      } catch (error) {
+        showToast("Error", error, "error"); 
+      } 
+    }
+
+    getPost();
+    
+  }, [postId, showToast]);
+
+
+  if (!user && loading) return (
+    <Flex justify={"center"}>
+      <Spinner size={"xl"} />
+    </Flex>
+  );
+
+  if (!post) return null;
+
   return (
     <>
       <Flex>
         <Flex w={"full"} alignItems={"center"} gap={3}>
-          <Avatar name="Mark Zuckerberg" src="/zuck-avatar.png" size={"md"} />
+          <Avatar name={user.name} src={user.profilePic} size={"md"} />
           <Flex>
             <Text fontSize={"sm"} fontWeight={"bold"}>
-              markzuckerberg
+              {user.username}
             </Text>
             <Image src="/verified.png" w={4} h={4} ml={4} />
           </Flex>
@@ -35,7 +74,7 @@ const PostPage = () => {
         </Flex>
       </Flex>
 
-      <Text my={3}>Let&apos;s talk about</Text>
+      <Text my={3}>{post.text}</Text>
       <Box
         borderRadius={6}
         overflow={"hidden"}
@@ -46,7 +85,7 @@ const PostPage = () => {
       </Box>
 
       <Flex gap={3} my={3}>
-        <Actions liked={liked} setLiked={setLiked} />
+        <Actions post={post} />
       </Flex>
 
       <Flex gap={2} alignItems={"center"}>
@@ -55,7 +94,7 @@ const PostPage = () => {
         </Text>
         <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"} />
         <Text color={"gray.light"} fontSize={"sm"}>
-          {200 + (liked ? 1 : 0)} likes
+          {200} likes
         </Text>
       </Flex>
 
@@ -72,29 +111,15 @@ const PostPage = () => {
 
       <Divider my={4} />
 
-      <Comment
+      {/* <Comment
         comment={"Looks really good"}
         createdAt={"2d"}
         likes={100}
         userName={"johndoe"}
         userAvatar={"https://bit.ly/dan-abramov"}
-      />
+      /> */}
 
-      <Comment
-        comment={"Amazing"}
-        createdAt={"2d"}
-        likes={21}
-        userName={"janedoe"}
-        userAvatar={"https://bit.ly/prosper-baba"}
-      />
 
-      <Comment
-        comment={"Looks good"}
-        createdAt={"2d"}
-        likes={10}
-        userName={"sallydoe"}
-        userAvatar={"https://bit.ly/sage-adebayo"}
-      />
     </>
   );
 };
