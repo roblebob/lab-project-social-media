@@ -10,20 +10,24 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { BsThreeDots } from "react-icons/bs";
-import Actions from "../components/Actions"; 
+import Actions from "../components/Actions";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
+import { formatDistanceToNow } from "date-fns";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
 
-const PostPage = () => { 
-
-  const {user, loading} = useGetUserProfile();
+const PostPage = () => {
+  const { user, loading } = useGetUserProfile();
   const [post, setPost] = useState(null);
-  const showToast = useShowToast(); 
+  const showToast = useShowToast();
+  const currentUser = useRecoilValue(userAtom);
 
   const { postId } = useParams();
 
-  useEffect(() => { 
+  useEffect(() => {
     const getPost = async () => {
       try {
         const res = await fetch(`/api/posts/${postId}`);
@@ -36,20 +40,21 @@ const PostPage = () => {
         console.log(data);
         setPost(data);
       } catch (error) {
-        showToast("Error", error, "error"); 
-      } 
-    }
+        showToast("Error", error, "error");
+      }
+    };
 
     getPost();
-    
   }, [postId, showToast]);
 
+  const handleDeletePost = async () => {};
 
-  if (!user && loading) return (
-    <Flex justify={"center"}>
-      <Spinner size={"xl"} />
-    </Flex>
-  );
+  if (!user && loading)
+    return (
+      <Flex justify={"center"}>
+        <Spinner size={"xl"} />
+      </Flex>
+    );
 
   if (!post) return null;
 
@@ -67,36 +72,34 @@ const PostPage = () => {
         </Flex>
 
         <Flex gap={4} alignItems={"center"}>
-          <Text fontSize={"sm"} color={"gray.light"}>
-            1d
+          <Text fontSize={"xs"} w={36} textAlign={"right"} color={"gray.light"}>
+            {formatDistanceToNow(new Date(post.createdAt))} ago
           </Text>
-          <BsThreeDots />
+
+          {currentUser?._id === user._id && (
+            <DeleteIcon size={20} onClick={handleDeletePost} cursor={"pointer"}/>
+          )}
         </Flex>
       </Flex>
 
       <Text my={3}>{post.text}</Text>
-      <Box
-        borderRadius={6}
-        overflow={"hidden"}
-        border={"1px solid"}
-        borderColor={"gray.light"}
-      >
-        <Image src={"/post1.png"} w={"full"} />
-      </Box>
+
+      {post.img && (
+        <Box
+          borderRadius={6}
+          overflow={"hidden"}
+          border={"1px solid"}
+          borderColor={"gray.light"}
+        >
+          <Image src={post.img} w={"full"} />
+        </Box>
+      )}
 
       <Flex gap={3} my={3}>
         <Actions post={post} />
       </Flex>
 
-      <Flex gap={2} alignItems={"center"}>
-        <Text color={"gray.light"} fontSize={"sm"}>
-          258 replies
-        </Text>
-        <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"} />
-        <Text color={"gray.light"} fontSize={"sm"}>
-          {200} likes
-        </Text>
-      </Flex>
+
 
       <Divider my={4} />
 
@@ -118,8 +121,6 @@ const PostPage = () => {
         userName={"johndoe"}
         userAvatar={"https://bit.ly/dan-abramov"}
       /> */}
-
-
     </>
   );
 };
