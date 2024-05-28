@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 import useLogout from "../hooks/useLogout";
 import authScreenAtom from "../atoms/authAtom";
+import { BsFillChatQuoteFill } from "react-icons/bs";
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -39,6 +40,10 @@ const Navbar = () => {
         <Flex alignItems={"center"} gap={4}>
           <Link as={RouterLink} to={`/${user.username}`}>
             <RxAvatar size={24} />
+          </Link>
+
+          <Link as={RouterLink} to={`/chat`}>
+            <BsFillChatQuoteFill size={20} />
           </Link>
 
           <Button size={"xs"} onClick={logout}>
