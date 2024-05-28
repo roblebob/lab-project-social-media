@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Divider,
   Flex,
   Image,
@@ -11,8 +10,12 @@ import {
 } from "@chakra-ui/react";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
+import { useRecoilState } from "recoil";
+import messagesAtom from "../atoms/messagesAtom";
 
 const MessageContainer = () => {
+  const [messages, setMessages] = useRecoilState(messagesAtom);
+
   return (
     <Flex
       flex={70}
