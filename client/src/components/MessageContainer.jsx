@@ -10,11 +10,11 @@ import {
 } from "@chakra-ui/react";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-import { useRecoilState } from "recoil";
-import messagesAtom from "../atoms/messagesAtom";
+// import { useRecoilState } from "recoil";
+// import messagesAtom from "../atoms/messagesAtom";
 
 const MessageContainer = () => {
-  const [messages, setMessages] = useRecoilState(messagesAtom);
+  // const [messages, setMessages] = useRecoilState(messagesAtom);
 
   return (
     <Flex
