@@ -32,7 +32,7 @@ const ChatPage = () => {
           sm: "400px",
           md: "full",
         }}
-        maxX={"auto"}
+        maxH={"auto"}
       >
         <Flex
           flex={30}
@@ -75,17 +75,25 @@ const ChatPage = () => {
               </Flex>
             ))}
 
-            <Converstation />
-            <Converstation />
-            <Converstation />
+          <Converstation />
+          <Converstation />
+          <Converstation />
         </Flex>
 
-        <Flex flex={70} borderRadius={"md"} p={2} flexDir={"column"} alignItems={"center"} justifyContent={"center"} h={"400px"}>
-            <GiConversation size={100} />
-            <Text fontSize={20} >Select a conversation to start messaging</Text>
-        </Flex>
+        {/* <Flex
+          flex={70}
+          borderRadius={"md"}
+          p={2}
+          flexDir={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          h={"400px"}
+        >
+          <GiConversation size={100} />
+          <Text fontSize={20}>Select a conversation to start messaging</Text>
+        </Flex> */}
 
-            <MessageContainer />
+        <MessageContainer />
       </Flex>
     </Box>
   );
