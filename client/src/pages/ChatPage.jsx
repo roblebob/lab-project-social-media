@@ -46,7 +46,6 @@ const ChatPage = () => {
       }
 
       const messagingYouself = searchedUser._id === currentUser._id;
-
       if (messagingYouself) {
         showToast("Error", "You can't send message to yourself", "error");
         return;
@@ -64,6 +63,29 @@ const ChatPage = () => {
         });
         return;
       }
+
+      console.log("searchedUser: ", searchedUser);
+
+      const mockConversation = {
+        mock: true,
+        lastMessage: {
+          text: "",
+          sender: "",
+        },
+        _id: Date.now(),
+        participants: [
+          {
+            _id: searchedUser._id,
+            username: searchedUser.username,
+            profilePic: searchedUser.profilePic,
+          },
+        ],
+      };
+
+      setConversations((prevConversations) => [
+        ...prevConversations,
+        mockConversation,
+      ]);
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
