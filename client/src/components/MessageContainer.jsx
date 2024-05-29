@@ -16,6 +16,7 @@ import useShowToast from "../hooks/useShowToast";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 import userAtom from "../atoms/userAtom";
+import { useSocket } from "../context/SocketContext";
 
 const MessageContainer = () => {
   const [selectedConversation, setSelectedConversation] = useRecoilState(
@@ -25,15 +26,23 @@ const MessageContainer = () => {
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [messages, setMessages] = useState([]);
   const currentUser = useRecoilValue(userAtom);
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    socket.on("newMessage", (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    return () => socket.off("newMessage");
+  }, [socket]);
 
   useEffect(() => {
     const getMessages = async () => {
       setLoadingMessages(true);
       setMessages([]);
       try {
-        if (selectedConversation.mock) return; 
-          
-        
+        if (selectedConversation.mock) return;
+
         const res = await fetch(`/api/messages/${selectedConversation.userId}`);
         const data = await res.json();
         if (data.error) {
@@ -111,7 +120,7 @@ const MessageContainer = () => {
           ))}
       </Flex>
 
-      <MessageInput setMessages={setMessages}/>
+      <MessageInput setMessages={setMessages} />
     </Flex>
   );
 };
