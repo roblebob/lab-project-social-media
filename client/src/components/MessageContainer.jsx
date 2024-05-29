@@ -10,11 +10,42 @@ import {
 } from "@chakra-ui/react";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-// import { useRecoilState } from "recoil";
-// import messagesAtom from "../atoms/messagesAtom";
+import { useEffect, useState } from "react";
+
+import useShowToast from "../hooks/useShowToast";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { selectedConversationAtom } from "../atoms/messagesAtom";
+import userAtom from "../atoms/userAtom";
 
 const MessageContainer = () => {
-  // const [messages, setMessages] = useRecoilState(messagesAtom);
+  const [selectedConversation, setSelectedConversation] = useRecoilState(
+    selectedConversationAtom
+  );
+  const showToast = useShowToast();
+  const [loadingMessages, setLoadingMessages] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const currentUser = useRecoilValue(userAtom);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await fetch(`/api/messages/${selectedConversation.userId}`);
+        const data = await res.json();
+        if (data.error) {
+          showToast("Error", data.error, "error");
+          return;
+        }
+        console.log("->", data);
+        setMessages(data);
+      } catch (error) {
+        showToast("Error", error.message, "error");
+      } finally {
+        setLoadingMessages(false);
+      }
+    };
+
+    getMessages();
+  }, [showToast, selectedConversation.userId]);
 
   return (
     <Flex
@@ -35,8 +66,15 @@ const MessageContainer = () => {
       <Divider />
 
       {/* Messages */}
-      <Flex flexDir={"column"} gap={4} my={4} p={2} h={"400px"} overflowY={"auto"}>
-        {false &&
+      <Flex
+        flexDir={"column"}
+        gap={4}
+        my={4}
+        p={2}
+        h={"400px"}
+        overflowY={"auto"}
+      >
+        {loadingMessages &&
           [...Array(5)].map((_, i) => (
             <Flex
               key={i}
@@ -57,22 +95,18 @@ const MessageContainer = () => {
               {i % 2 !== 0 && <SkeletonCircle size={7} />}
             </Flex>
           ))}
-        <Message ownMessage={true} />
-        <Message ownMessage={false} /> 
-        <Message ownMessage={false} /> 
-        <Message ownMessage={true} />
-        <Message ownMessage={true} />
-        <Message ownMessage={false} /> 
-        <Message ownMessage={false} /> 
-        <Message ownMessage={true} />
-        <Message ownMessage={true} />
-        <Message ownMessage={false} /> 
-        <Message ownMessage={false} /> 
-        <Message ownMessage={true} />
+
+        {!loadingMessages &&
+          messages.map((message) => (
+            <Message
+              key={message._id}
+              message={message}
+              ownMessage={currentUser._id === message.sender}
+            />
+          ))}
       </Flex>
 
-    <MessageInput />
-
+      <MessageInput />
     </Flex>
   );
 };

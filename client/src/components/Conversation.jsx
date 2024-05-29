@@ -11,16 +11,16 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { BsCheck2All } from "react-icons/bs";
-import { selectedConversation } from "../atoms/messagesAtom";
+import { selectedConversationAtom } from "../atoms/messagesAtom";
 
 const Conversation = ({ conversation }) => {
   const currentUser = useRecoilValue(userAtom);
   const user = conversation.participants[0];
   const lastMessage = conversation.lastMessage;
-  const [selecteConversation, setSelectedConversation] = useRecoilState(selectedConversation);
+  const [selecteConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
   const colorMode = useColorModeValue();
 
-  console.log("selectedConversation: ", selecteConversation);
+  // console.log("selectedConversation: ", selecteConversation);
   return (
     <Flex
       gap={4}

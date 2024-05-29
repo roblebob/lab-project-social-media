@@ -6,7 +6,7 @@ const conversationsAtom = new atom({
     default: [],
 });
 
-export const selectedConversation = new atom({
+export const selectedConversationAtom = new atom({
     key: "selectedConversation",
     default: {
         _id: "",
