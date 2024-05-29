@@ -8,6 +8,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 import { ColorModeScript } from "@chakra-ui/color-mode";
 import { RecoilRoot } from "recoil";
+import { SocketContextProvider } from "./context/SocketContext.jsx";
 
 const styles = {
   global: (props) => ({
@@ -33,14 +34,15 @@ const colors = {
 const theme = extendTheme({ styles, config, colors });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  
   // React.strictMode renders every component twice on development, on production only once.
   <React.StrictMode>
     <RecoilRoot>
       <BrowserRouter>
         <ChakraProvider theme={theme}>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-          <App />
+          <SocketContextProvider>
+            <App />
+          </SocketContextProvider>
         </ChakraProvider>
       </BrowserRouter>
     </RecoilRoot>

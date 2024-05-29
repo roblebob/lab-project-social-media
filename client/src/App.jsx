@@ -13,7 +13,6 @@ import ChatPage from "./pages/ChatPage";
 
 function App() {
   const user = useRecoilValue(userAtom);
-  console.log(user);
   return (
     <Box position={"relative"} w={"full"}>
       <Container maxWidth="620px">
