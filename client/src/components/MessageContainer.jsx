@@ -28,6 +28,8 @@ const MessageContainer = () => {
 
   useEffect(() => {
     const getMessages = async () => {
+      setLoadingMessages(true);
+      setMessages([]);
       try {
         const res = await fetch(`/api/messages/${selectedConversation.userId}`);
         const data = await res.json();
@@ -57,9 +59,9 @@ const MessageContainer = () => {
     >
       {/* Message Header */}
       <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
-        <Avatar src="" size={"sm"} />
+        <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
         <Text display={"flex"} alignItems={"center"}>
-          johndoe
+          {selectedConversation.username}
           <Image src="/verified.png" w={4} h={4} ml={1} />
         </Text>
       </Flex>
@@ -106,7 +108,7 @@ const MessageContainer = () => {
           ))}
       </Flex>
 
-      <MessageInput />
+      <MessageInput setMessages={setMessages}/>
     </Flex>
   );
 };
