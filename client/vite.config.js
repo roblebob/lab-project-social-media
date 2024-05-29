@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const PORT_SERVER = dotenv.PORT_SERVER || 5000;
+const PORT_SERVER = dotenv.PORT_SERVER || 5005;
 const PORT_CLIENT = dotenv.PORT_CLIENT || 3000;
 
 // https://vitejs.dev/config/

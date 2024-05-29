@@ -15,7 +15,7 @@ dotenv.config();
 connectDB();
 job.start();
 
-const PORT_SERVER = process.env.PORT_SERVER || 5000;
+const PORT_SERVER = process.env.PORT_SERVER || 5005;
 const __dirname = path.resolve();
 
 cloudinary.config({
