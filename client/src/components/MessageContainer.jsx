@@ -19,7 +19,7 @@ import conversationsAtom, {
 } from "../atoms/messagesAtom";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext";
-import messageSound from "../assets/sounds/message.mp3"; 
+import messageSound from "../../public/message.mp3"; 
 
 const MessageContainer = () => {
   const selectedConversation = useRecoilValue(selectedConversationAtom);
