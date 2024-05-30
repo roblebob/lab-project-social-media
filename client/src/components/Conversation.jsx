@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
-import { BsCheck2All } from "react-icons/bs";
+import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 
 const Conversation = ({ conversation, isOnline }) => {
@@ -72,7 +72,7 @@ const Conversation = ({ conversation, isOnline }) => {
           )}
           {lastMessage.text.length > 18
             ? lastMessage.text.slice(0, 18) + "..."
-            : lastMessage.text}
+            : lastMessage.text || <BsFillImageFill size={16} />}
         </Flex>
       </Stack>
     </Flex>

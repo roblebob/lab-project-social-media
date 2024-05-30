@@ -18,6 +18,7 @@ const Message = ({ message, ownMessage }) => {
           {message.text && (
             <Flex bg={"green.800"} maxW={"350px"} p={1} borderRadius={"md"}>
               <Text color={"white"}>{message.text}</Text>
+
               <Box
                 alignSelf={"flex-end"}
                 ml={1}
@@ -44,11 +45,15 @@ const Message = ({ message, ownMessage }) => {
 
           {message.img && imgLoaded && (
             <Flex mt={5} width={"200px"}>
-              <Image
-                src={message.img}
-                alt="Message Image"
-                borderRadius={4} 
-              /> 
+              <Image src={message.img} alt="Message Image" borderRadius={4} />
+              <Box
+                alignSelf={"flex-end"}
+                ml={1}
+                color={message.seen ? "blue.400" : ""}
+                fontWeight={"bold"}
+              >
+                <BsCheck2All size={16} />
+              </Box>
             </Flex>
           )}
 
@@ -69,7 +74,20 @@ const Message = ({ message, ownMessage }) => {
             </Text>
           )}
 
-          {message.img && (
+          {message.img && !imgLoaded && (
+            <Flex mt={5} width={"200px"}>
+              <Image
+                src={message.img}
+                alt="Message Image"
+                borderRadius={4}
+                hidden
+                onLoad={() => setImgLoaded(true)}
+              />
+              <Skeleton w={"200px"} h={"200px"} />
+            </Flex>
+          )}
+
+          {message.img && imgLoaded && (
             <Flex mt={5} width={"200px"}>
               <Image src={message.img} alt="Message Image" borderRadius={4} />
             </Flex>
