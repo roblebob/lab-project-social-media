@@ -66,8 +66,6 @@ const ChatPage = () => {
         return;
       }
 
-      console.log("searchedUser: ", searchedUser);
-
       const mockConversation = {
         mock: true,
         lastMessage: {
@@ -94,6 +92,28 @@ const ChatPage = () => {
       setSearchingUser(false);
     }
   };
+
+  useEffect(() => {
+    socket?.on("messagesSeen", ({ conversationId }) => {
+      setConversations((prevConversations) => {
+        const updatedConversations = prevConversations.map((conversation) => {
+          if (conversation._id === conversationId) {
+            return {
+              ...conversation,
+              lastMessage: {
+                ...conversation.lastMessage,
+                seen: true,
+              },
+            };
+          }
+
+          return conversation;
+        });
+
+        return updatedConversations;
+      });
+    });
+  }, [socket, setConversations]);
 
   useEffect(() => {
     const getConversations = async () => {

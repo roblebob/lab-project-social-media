@@ -1,6 +1,7 @@
 import {
   Avatar,
   AvatarBadge,
+  Box,
   Flex,
   Image,
   Stack,
@@ -17,7 +18,9 @@ const Conversation = ({ conversation, isOnline }) => {
   const currentUser = useRecoilValue(userAtom);
   const user = conversation.participants[0];
   const lastMessage = conversation.lastMessage;
-  const [selecteConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
+  const [selecteConversation, setSelectedConversation] = useRecoilState(
+    selectedConversationAtom
+  );
   const colorMode = useColorModeValue();
 
   // console.log("selectedConversation: ", selecteConversation);
@@ -31,23 +34,27 @@ const Conversation = ({ conversation, isOnline }) => {
         bg: useColorModeValue("gray.600", "gray.dark"),
         color: "white",
       }}
-      onClick={() => setSelectedConversation({
-        _id: conversation._id,
-        userId: user._id,
-        username: user.username,
-        userProfilePic: user.profilePic,
-        mock: conversation.mock,
-      })}
-      bg={selecteConversation._id === conversation._id ? (colorMode === "light" ? "gray.400" :"gray.dark"): ""}
+      onClick={() =>
+        setSelectedConversation({
+          _id: conversation._id,
+          userId: user._id,
+          username: user.username,
+          userProfilePic: user.profilePic,
+          mock: conversation.mock,
+        })
+      }
+      bg={
+        selecteConversation._id === conversation._id
+          ? colorMode === "light"
+            ? "gray.400"
+            : "gray.dark"
+          : ""
+      }
       borderRadius={"md"}
     >
       <WrapItem>
-        <Avatar
-          size={{ base: "xs", sm: "sm", md: "md" }}
-          src={user.profilePic}
-        >
+        <Avatar size={{ base: "xs", sm: "sm", md: "md" }} src={user.profilePic}>
           {isOnline && <AvatarBadge boxSize="1em" bg="green.500" />}
-          
         </Avatar>
       </WrapItem>
       <Stack direction="column" fontSize={"sm"}>
@@ -55,10 +62,18 @@ const Conversation = ({ conversation, isOnline }) => {
           {user.username}
           <Image src="/verified.png" w={4} h={4} ml={1} />
         </Text>
-        <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-          {currentUser._id === lastMessage.sender ? <BsCheck2All size={16}/> : ""}
-          {lastMessage.text.length > 18 ? lastMessage.text.slice(0, 18) + "..." : lastMessage.text}
-        </Text>
+        <Flex fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
+          {currentUser._id === lastMessage.sender ? (
+            <Box color={lastMessage.seen ? "blue.400" : ""}>
+              <BsCheck2All size={16} />
+            </Box>
+          ) : (
+            ""
+          )}
+          {lastMessage.text.length > 18
+            ? lastMessage.text.slice(0, 18) + "..."
+            : lastMessage.text}
+        </Flex>
       </Stack>
     </Flex>
   );
