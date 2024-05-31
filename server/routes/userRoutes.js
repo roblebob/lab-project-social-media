@@ -25,10 +25,10 @@ router.put("/update/:id", protectRoute, updateUser);
 router.put("/freeze", protectRoute, freezeAccount);
 
 // just for testing db 
-router.get("/", (req, res) => {
-  User.find()
-    .then((users) => res.json(users))
-    .catch((err) => res.status(400).json("Error: " + err));
-});
+// router.get("/", (req, res) => {
+//   User.find()
+//     .then((users) => res.json(users))
+//     .catch((err) => res.status(400).json("Error: " + err));
+// });
 
 export default router;

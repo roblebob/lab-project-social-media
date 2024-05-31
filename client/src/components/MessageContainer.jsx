@@ -20,6 +20,8 @@ import conversationsAtom, {
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext";
 import messageSound from "/public/message.mp3";
+import { useNavigate } from "react-router-dom";
+
 
 const MessageContainer = () => {
   const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -30,6 +32,8 @@ const MessageContainer = () => {
   const { socket } = useSocket();
   const setConversations = useSetRecoilState(conversationsAtom);
   const messageEndRef = useRef(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     socket.on("newMessage", (newMessage) => {
@@ -132,8 +136,9 @@ const MessageContainer = () => {
       p={2}
     >
       {/* Message Header */}
+
       <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
-        <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
+        <Avatar src={selectedConversation.userProfilePic} size={"sm"} onClick={navigate(`/${selectedConversation.username}`)}/>
         <Text display={"flex"} alignItems={"center"}>
           {selectedConversation.username}
           <Image src="/verified.png" w={4} h={4} ml={1} />
